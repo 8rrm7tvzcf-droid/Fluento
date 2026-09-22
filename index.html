@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Fluento</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1E8F82">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fluento">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ color-scheme: light dark; }
+  html, body{ height:100%; }
+  body{ margin:0; background:#F6F7FB; }
+  img{ max-width:100%; }
+  [hidden]{ display:none!important; }
+</style>
+</head>
+<body>
+<style>
+  :root{
+    --ink:#16233B;
+    --ink-soft:#4A5773;
+    --paper:#F6F7FB;
+    --surface:#FFFFFF;
+    --surface-sunken:#EDEFF6;
+    --line:#DEE1EC;
+    --teal:#1E8F82;
+    --teal-ink:#0E4A44;
+    --hero-end:#0E4A44;
+    --gold:#E8A93B;
+    --gold-ink:#6E4E11;
+    --coral:#E4634E;
+    --a1:#1E8F82; --a2:#4C9B6E; --b1:#7FA357; --b2:#B29A3F; --c1:#D6A238; --c2:#E8A93B;
+    --radius-s:10px; --radius-m:16px; --radius-l:22px;
+    --shadow-1:0 1px 2px rgba(22,35,59,.06), 0 1px 1px rgba(22,35,59,.04);
+    --shadow-2:0 8px 24px rgba(22,35,59,.10);
+    --font-display:'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --font-body:'Manrope', 'Segoe UI', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#EDEFF7; --ink-soft:#AEB6CC; --paper:#0F1420; --surface:#171E2E;
+      --surface-sunken:#131826; --line:#2A3247;
+      --teal:#3FB6A6; --teal-ink:#B7ECE3; --gold:#F0BE63; --gold-ink:#3A2A08; --coral:#F2836C;
+      --a1:#3FB6A6; --a2:#6FBE8E; --b1:#9EC177; --b2:#D0B457; --c1:#E8C25B; --c2:#F0BE63;
+      --hero-end:#08211D;
+      --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 10px 28px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#EDEFF7; --ink-soft:#AEB6CC; --paper:#0F1420; --surface:#171E2E;
+    --surface-sunken:#131826; --line:#2A3247;
+    --teal:#3FB6A6; --teal-ink:#B7ECE3; --gold:#F0BE63; --gold-ink:#3A2A08; --coral:#F2836C;
+    --a1:#3FB6A6; --a2:#6FBE8E; --b1:#9EC177; --b2:#D0B457; --c1:#E8C25B; --c2:#F0BE63;
+    --hero-end:#08211D;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 10px 28px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%; background:var(--paper); overscroll-behavior-y:none;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center;
+  }
+  #shell{
+    width:100%; max-width:480px; min-height:100%;
+    display:flex; flex-direction:column; position:relative;
+    background:var(--paper);
+  }
+  h1,h2,h3{font-family:var(--font-display); font-weight:600; margin:0; text-wrap:balance;}
+  p{margin:0;}
+  button{font-family:inherit; cursor:pointer;}
+  .mono{font-family:var(--font-mono);}
+
+  header.topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:var(--paper); padding:14px 18px 10px; display:flex; align-items:center;
+    justify-content:space-between; gap:10px; border-bottom:1px solid transparent;
+  }
+  header.topbar.scrolled{border-bottom-color:var(--line);}
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand-mark{width:30px; height:30px; border-radius:9px; background:linear-gradient(150deg,var(--teal),var(--gold)); display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:700; font-size:15px; flex:none;}
+  .brand-name{font-family:var(--font-display); font-weight:700; font-size:18px; letter-spacing:.2px;}
+  .stat-pill{display:flex; align-items:center; gap:5px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 11px; font-size:12.5px; font-weight:700; box-shadow:var(--shadow-1);}
+  .stat-pill.streak{color:var(--coral);}
+  .stat-pill.xp{color:var(--gold-ink);}
+  .stat-pill svg{width:14px; height:14px; flex:none;}
+  .topbar-stats{display:flex; gap:7px;}
+
+  main{flex:1; padding:6px 18px calc(96px + env(safe-area-inset-bottom,0px)); overflow-y:auto;}
+  .section-title{font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin:22px 0 10px;}
+  .section-title:first-child{margin-top:6px;}
+
+  nav.bottombar{
+    position:fixed; left:50%; transform:translateX(-50%); bottom:0; z-index:30;
+    width:100%; max-width:480px; background:var(--surface); border-top:1px solid var(--line);
+    display:flex; padding:8px 8px calc(10px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -6px 20px rgba(22,35,59,.06);
+  }
+  .navbtn{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color:var(--ink-soft); padding:6px 2px; border-radius:12px; font-size:11px; font-weight:700;}
+  .navbtn svg{width:22px; height:22px;}
+  .navbtn.active{color:var(--teal);}
+  .navbtn .dot{width:16px; height:16px; border-radius:50%; background:var(--coral); color:#fff; font-size:9px; display:flex; align-items:center; justify-content:center; position:absolute; transform:translate(11px,-9px);}
+
+  /* --- cards & components --- */
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); box-shadow:var(--shadow-1);}
+  .hero{
+    background:linear-gradient(155deg, var(--teal) 0%, var(--hero-end) 130%);
+    color:#fff; border-radius:var(--radius-l); padding:20px; position:relative; overflow:hidden;
+  }
+  .hero .eyebrow{font-size:11.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.85;}
+  .hero h2{font-size:22px; color:#fff; margin:6px 0 4px;}
+  .hero p.sub{font-size:13.5px; opacity:.92; line-height:1.45;}
+  .hero .go-btn{margin-top:14px; background:#fff; color:var(--teal-ink); border:none; border-radius:999px; padding:11px 18px; font-weight:800; font-size:14px; display:inline-flex; align-items:center; gap:8px;}
+  .ring-wrap{position:absolute; right:14px; top:14px; width:64px; height:64px;}
+
+  .stats-row{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:14px;}
+  .stat-tile{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:12px 10px; text-align:center;}
+  .stat-tile .num{font-family:var(--font-display); font-size:21px; font-weight:700; font-variant-numeric:tabular-nums;}
+  .stat-tile .lbl{font-size:10.5px; color:var(--ink-soft); font-weight:700; margin-top:2px;}
+
+  .path-level{margin-bottom:6px;}
+  .level-head{display:flex; align-items:center; gap:10px; padding:10px 2px 8px;}
+  .level-chip{width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:13px; color:#fff; flex:none;}
+  .level-name{font-size:15px; font-weight:800;}
+  .level-desc{font-size:12px; color:var(--ink-soft);}
+
+  .lesson-row{display:flex; align-items:center; gap:12px; padding:13px 12px; border-radius:var(--radius-m); margin-bottom:8px; border:1px solid var(--line); background:var(--surface); text-align:left; width:100%;}
+  .lesson-row[disabled]{opacity:.5;}
+  .lesson-row .num{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex:none; background:var(--surface-sunken); color:var(--ink-soft);}
+  .lesson-row.done .num{background:var(--teal); color:#fff;}
+  .lesson-row .body{flex:1; min-width:0;}
+  .lesson-row .title{font-weight:700; font-size:14.5px;}
+  .lesson-row .grammar{font-size:12px; color:var(--ink-soft); margin-top:1px;}
+  .lesson-row .chev{color:var(--ink-soft); flex:none;}
+  .lesson-row .lock{width:16px;height:16px;color:var(--ink-soft);flex:none;}
+
+  .progressbar{display:flex; gap:5px; padding:10px 0 4px;}
+  .progressbar span{flex:1; height:5px; border-radius:3px; background:var(--surface-sunken);}
+  .progressbar span.on{background:var(--teal);}
+
+  .flashcard{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); box-shadow:var(--shadow-2);
+    padding:26px 20px; min-height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; cursor:pointer;
+  }
+  .flashcard .word{font-family:var(--font-display); font-size:28px; font-weight:700;}
+  .flashcard .ipa{font-family:var(--font-mono); font-size:13.5px; color:var(--teal-ink); background:var(--surface-sunken); padding:3px 10px; border-radius:999px;}
+  .flashcard .it{font-size:15px; color:var(--ink-soft); margin-top:4px;}
+  .flashcard .ex{font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:10px; line-height:1.4;}
+  .flashcard .hint{position:absolute; bottom:10px; font-size:10.5px; color:var(--ink-soft);}
+  .flip-outer{perspective:1000px; position:relative;}
+
+  .btn{border:none; border-radius:999px; padding:13px 20px; font-weight:800; font-size:14.5px; display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%;}
+  .btn-primary{background:var(--teal); color:#fff;}
+  .btn-primary:disabled{opacity:.45;}
+  .btn-ghost{background:var(--surface); color:var(--ink); border:1px solid var(--line);}
+  .btn-row{display:flex; gap:9px; margin-top:14px;}
+  .btn-row .btn{flex:1;}
+  .btn-sm{width:auto; padding:9px 15px; font-size:13px;}
+
+  .quiz-q{font-size:16.5px; font-weight:700; line-height:1.4; margin-bottom:16px;}
+  .opt{display:block; width:100%; text-align:left; padding:13px 15px; border-radius:var(--radius-m); border:1.5px solid var(--line); background:var(--surface); margin-bottom:9px; font-size:14.5px; font-weight:600; color:var(--ink);}
+  .opt.correct{border-color:var(--teal); background:color-mix(in srgb, var(--teal) 14%, var(--surface));}
+  .opt.wrong{border-color:var(--coral); background:color-mix(in srgb, var(--coral) 14%, var(--surface));}
+  .opt:disabled{opacity:.85;}
+  .explain{font-size:13px; color:var(--ink-soft); background:var(--surface-sunken); border-radius:var(--radius-s); padding:11px 13px; margin-top:6px; line-height:1.45;}
+
+  .grammar-box{padding:2px 2px 14px;}
+  .grammar-box p{font-size:14.5px; line-height:1.65; margin-bottom:12px;}
+  .example{font-size:14px; padding:10px 12px; background:var(--surface-sunken); border-left:3px solid var(--teal); border-radius:8px; margin-bottom:8px;}
+  .example .it{color:var(--ink-soft); font-size:12.5px; margin-top:3px;}
+
+  .listen-card{padding:18px; text-align:center;}
+  .speak-btn{width:64px; height:64px; border-radius:50%; background:var(--teal); color:#fff; border:none; display:flex; align-items:center; justify-content:center; margin:6px auto 14px; box-shadow:var(--shadow-2);}
+  .speak-btn svg{width:26px; height:26px;}
+  .mic-btn{width:72px; height:72px; border-radius:50%; background:var(--coral); color:#fff; border:none; display:flex; align-items:center; justify-content:center; margin:10px auto; box-shadow:var(--shadow-2);}
+  .mic-btn.listening{animation:pulse 1.1s ease-in-out infinite;}
+  @media (prefers-reduced-motion: reduce){ .mic-btn.listening{animation:none;} }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(228,99,78,.5);}50%{box-shadow:0 0 0 14px rgba(228,99,78,0);}}
+  .sentence{font-family:var(--font-display); font-size:19px; font-weight:600; margin:8px 0 3px;}
+  .sentence-it{font-size:13px; color:var(--ink-soft); margin-bottom:6px;}
+  .transcript{font-size:13px; background:var(--surface-sunken); border-radius:8px; padding:9px 11px; margin-top:10px; min-height:20px;}
+  .feedback-pill{display:inline-block; font-size:12.5px; font-weight:800; padding:5px 12px; border-radius:999px; margin-top:8px;}
+  .feedback-pill.good{background:color-mix(in srgb, var(--teal) 20%, var(--surface)); color:var(--teal-ink);}
+  .feedback-pill.mid{background:color-mix(in srgb, var(--gold) 25%, var(--surface)); color:var(--gold-ink);}
+  .feedback-pill.bad{background:color-mix(in srgb, var(--coral) 18%, var(--surface)); color:var(--coral);}
+  .note{font-size:12px; color:var(--ink-soft); margin-top:10px; line-height:1.4;}
+
+  .badge-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:8px;}
+  .badge{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:12px 6px; text-align:center; opacity:.35;}
+  .badge.earned{opacity:1;}
+  .badge .ic{width:30px; height:30px; margin:0 auto 6px; border-radius:50%; background:var(--surface-sunken); display:flex; align-items:center; justify-content:center; color:var(--gold-ink);}
+  .badge.earned .ic{background:linear-gradient(150deg,var(--teal),var(--gold)); color:#fff;}
+  .badge .lbl{font-size:10px; font-weight:700; line-height:1.2;}
+
+  .toast{position:fixed; left:50%; top:calc(env(safe-area-inset-top,0px) + 12px); transform:translate(-50%,-140%); z-index:60; background:var(--ink); color:var(--paper); font-weight:700; font-size:13px; padding:10px 18px; border-radius:999px; box-shadow:var(--shadow-2); transition:transform .35s ease; display:flex; align-items:center; gap:7px;}
+  .toast.show{transform:translate(-50%,0);}
+  @media (prefers-reduced-motion: reduce){ .toast{transition:none;} }
+
+  .segmented{display:flex; background:var(--surface-sunken); border-radius:999px; padding:3px; gap:3px;}
+  .segmented button{flex:1; border:none; background:none; padding:8px 6px; border-radius:999px; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+  .segmented button.on{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-1);}
+
+  .empty-state{text-align:center; padding:40px 10px; color:var(--ink-soft);}
+  .empty-state svg{width:44px; height:44px; margin-bottom:10px; opacity:.6;}
+
+  .vocab-list-item{display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px solid var(--line);}
+  .vocab-list-item:last-child{border-bottom:none;}
+  .box-dot{width:8px; height:8px; border-radius:50%; flex:none;}
+  .back-row{display:flex; align-items:center; gap:8px; padding:4px 0 10px; font-weight:800; font-size:14px; color:var(--ink-soft);}
+  .back-row svg{width:18px; height:18px;}
+  a, a:visited{color:inherit;}
+</style>
+
+<div id="shell">
+  <header class="topbar" id="topbar">
+    <div class="brand">
+      <div class="brand-mark">F</div>
+      <div class="brand-name">Fluento</div>
+    </div>
+    <div class="topbar-stats">
+      <div class="stat-pill streak" id="streakPill">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-.3-2-.8-2.8.6.2 1.8 1 2.3 2.6.7 2 .2 4.6-1.7 6.4A7.5 7.5 0 0 1 12 17.5 7.5 7.5 0 0 1 4.5 10c0-3.5 2.7-6 4.3-7.3C10 1.7 11.3 1 12 2z"/></svg>
+        <span id="streakVal">0</span>
+      </div>
+      <div class="stat-pill xp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.6L22 9l-5.5 4.6L18 22l-6-4-6 4 1.5-8.4L2 9l7.4-.4z"/></svg>
+        <span id="xpVal">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <nav class="bottombar">
+    <button class="navbtn" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>Home</button>
+    <button class="navbtn" data-view="path"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Lezioni</button>
+    <button class="navbtn" data-view="vocab" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h14v13"/></svg>Vocabolario<span class="dot" id="dueDot" hidden>0</span></button>
+    <button class="navbtn" data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v4"/></svg>Pronuncia</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================ DATA ============================ */
+var LEVEL_INFO = {
+  A1:{name:"Principiante", desc:"Le prime parole e frasi", color:"var(--a1)"},
+  A2:{name:"Elementare", desc:"Routine e vita di tutti i giorni", color:"var(--a2)"},
+  B1:{name:"Intermedio", desc:"Racconta esperienze e progetti", color:"var(--b1)"},
+  B2:{name:"Intermedio avanzato", desc:"Argomenta e lavora in inglese", color:"var(--b2)"},
+  C1:{name:"Avanzato", desc:"Sfumature, idiomi e persuasione", color:"var(--c1)"},
+  C2:{name:"Padronanza", desc:"Come un madrelingua colto", color:"var(--c2)"}
+};
+var LEVEL_ORDER = ["A1","A2","B1","B2","C1","C2"];
+
+function v(en, ipa, it, exEn, exIt){ return {en:en, ipa:ipa, it:it, exEn:exEn, exIt:exIt}; }
+function q(text, opts, correct, explain){ return {q:text, opts:opts, correct:correct, explain:explain}; }
+function li(audio, opts, correct, it){ return {audio:audio, opts:opts, correct:correct, it:it}; }
+
+var LESSONS = [
+{id:"a1-1", level:"A1", title:"Saluti e presentazioni", grammarTitle:"Il verbo “to be” e i pronomi",
+  grammar:[
+    "Il verbo <b>to be</b> (essere) è il verbo più usato in inglese: <b>I am</b>, <b>you are</b>, <b>he/she/it is</b>, <b>we are</b>, <b>they are</b>.",
+    "Nel parlato si usano quasi sempre le forme contratte: <b>I'm</b>, <b>you're</b>, <b>he's</b>, <b>she's</b>, <b>we're</b>, <b>they're</b>.",
+    "Forma negativa: <b>am not</b>, <b>isn't</b>, <b>aren't</b>. Forma interrogativa: si inverte l'ordine — <b>Are you...?</b>, <b>Is she...?</b>"
+  ],
+  examples:[["I'm Marco, nice to meet you.","Sono Marco, piacere di conoscerti."],["Are you a student?","Sei uno studente?"],["She isn't from London.","Lei non è di Londra."]],
+  vocab:[
+    v("hello","həˈloʊ","ciao","Hello! How are you?","Ciao! Come stai?"),
+    v("goodbye","ˌgʊdˈbaɪ","arrivederci","Goodbye, see you tomorrow!","Arrivederci, a domani!"),
+    v("name","neɪm","nome","What's your name?","Come ti chiami?"),
+    v("nice to meet you","naɪs tə miːt juː","piacere di conoscerti","Nice to meet you, Anna.","Piacere di conoscerti, Anna."),
+    v("student","ˈstuːdənt","studente","I am a student.","Sono uno studente."),
+    v("teacher","ˈtiːtʃər","insegnante","She is my teacher.","Lei è la mia insegnante."),
+    v("friend","frend","amico","He is a good friend.","Lui è un buon amico."),
+    v("from","frʌm","da (provenienza)","I'm from Italy.","Sono dall'Italia.")
+  ],
+  quiz:[
+    q("___ you a teacher?",["Is","Are","Am"],1,"Con “you” si usa sempre <b>are</b>."),
+    q("She ___ from Rome.",["am","is","are"],1,"Con “she” (terza persona singolare) si usa <b>is</b>."),
+    q("Scegli la negazione corretta: “I ___ tired.”",["isn't","aren't","am not"],2,"La forma negativa di “I am” è <b>I am not</b> (non esiste “amn't” nel parlato standard)."),
+    q("___ name is Anna.",["My","I","Me"],0,"Per indicare possesso davanti a un nome si usa l'aggettivo possessivo <b>my</b>."),
+    q("Come si dice “Piacere di conoscerti”?",["Goodbye, see you","Nice to meet you","How are you"],1,"“Nice to meet you” si usa quando conosci qualcuno per la prima volta.")
+  ],
+  listening:[
+    li("Hello, my name is Sarah.",["Hello, my name is Sarah.","Hello, my name is Sara.","Goodbye, my name is Sarah."],0,"Ciao, mi chiamo Sarah."),
+    li("Nice to meet you.",["Nice to see you.","Nice to meet you.","Nice to meet her."],1,"Piacere di conoscerti."),
+    li("Are you from Italy?",["Are you from Italy?","Are you from India?","Is she from Italy?"],0,"Sei dall'Italia?"),
+    li("I am a student.",["I am a teacher.","I am a student.","I'm not a student."],1,"Sono uno studente.")
+  ],
+  speaking:["Hello, my name is Marco.","Nice to meet you.","I am from Italy.","What's your name?"]
+},
+{id:"a1-2", level:"A1", title:"Famiglia e numeri", grammarTitle:"Possessivi, plurali e “have/has”",
+  grammar:[
+    "Gli aggettivi possessivi si mettono prima del nome e non concordano in genere: <b>my</b>, <b>your</b>, <b>his</b>, <b>her</b>, <b>its</b>, <b>our</b>, <b>their</b>.",
+    "Il plurale regolare si forma aggiungendo <b>-s</b> (brother → brothers). Alcuni plurali sono irregolari: <b>child → children</b>, <b>person → people</b>.",
+    "Per il possesso si usa <b>have</b> (I/you/we/they) e <b>has</b> (he/she/it): <b>She has two brothers.</b>"
+  ],
+  examples:[["This is my father.","Questo è mio padre."],["We have three children.","Abbiamo tre figli."],["How old are you?","Quanti anni hai?"]],
+  vocab:[
+    v("family","ˈfæməli","famiglia","This is my family.","Questa è la mia famiglia."),
+    v("mother","ˈmʌðər","madre","My mother is a doctor.","Mia madre è medico."),
+    v("father","ˈfɑːðər","padre","My father works a lot.","Mio padre lavora molto."),
+    v("brother","ˈbrʌðər","fratello","I have one brother.","Ho un fratello."),
+    v("sister","ˈsɪstər","sorella","Her sister is 20 years old.","Sua sorella ha 20 anni."),
+    v("children","ˈtʃɪldrən","bambini/figli","They have two children.","Hanno due figli."),
+    v("how old","haʊ oʊld","quanti anni","How old are you?","Quanti anni hai?"),
+    v("twenty","ˈtwenti","venti","She is twenty years old.","Lei ha venti anni.")
+  ],
+  quiz:[
+    q("This is ___ sister.",["my","I","me"],0,"Davanti al nome serve l'aggettivo possessivo <b>my</b>."),
+    q("She ___ two brothers.",["have","has","is"],1,"Con “she” si usa <b>has</b>."),
+    q("Il plurale di “child” è:",["childs","children","childes"],1,"È un plurale irregolare: <b>children</b>."),
+    q("How old ___ you?",["is","are","am"],1,"Con “you” si usa sempre <b>are</b>."),
+    q("Come si dice “Ho una sorella”?",["I have a sister.","I has a sister.","I am a sister."],0,"Con “I” si usa <b>have</b>.")
+  ],
+  listening:[
+    li("This is my family.",["This is my family.","This is my friend.","This is her family."],0,"Questa è la mia famiglia."),
+    li("I have two brothers and one sister.",["I have two brothers and one sister.","I have one brother and two sisters.","I have two sisters."],0,"Ho due fratelli e una sorella."),
+    li("How old are you?",["How old is she?","How old are you?","How are you?"],1,"Quanti anni hai?"),
+    li("She is twenty years old.",["She is twenty years old.","He is twenty years old.","She is twelve years old."],0,"Lei ha venti anni.")
+  ],
+  speaking:["This is my mother.","I have one brother.","How old are you?","My family is from Naples."]
+},
+{id:"a2-1", level:"A2", title:"La routine quotidiana", grammarTitle:"Present simple e avverbi di frequenza",
+  grammar:[
+    "Il <b>present simple</b> si usa per abitudini e routine: <b>I work</b>, <b>you work</b>... alla terza persona singolare si aggiunge <b>-s/-es</b>: <b>he works</b>, <b>she watches</b>.",
+    "Gli avverbi di frequenza (<b>always</b>, <b>usually</b>, <b>often</b>, <b>sometimes</b>, <b>never</b>) si mettono <u>prima</u> del verbo principale, ma <u>dopo</u> il verbo “to be”.",
+    "Esempio: <b>I always eat breakfast</b> (prima del verbo) ma <b>She is always late</b> (dopo “is”)."
+  ],
+  examples:[["I usually wake up at seven.","Di solito mi sveglio alle sette."],["She never drinks coffee.","Lei non beve mai caffè."],["He works from Monday to Friday.","Lui lavora dal lunedì al venerdì."]],
+  vocab:[
+    v("wake up","weɪk ʌp","svegliarsi","I wake up at seven.","Mi sveglio alle sette."),
+    v("breakfast","ˈbrekfəst","colazione","We have breakfast together.","Facciamo colazione insieme."),
+    v("always","ˈɔːlweɪz","sempre","She is always on time.","Lei è sempre puntuale."),
+    v("usually","ˈjuːʒuəli","di solito","I usually walk to work.","Di solito vado a lavoro a piedi."),
+    v("sometimes","ˈsʌmtaɪmz","a volte","Sometimes we eat out.","A volte mangiamo fuori."),
+    v("never","ˈnevər","mai","He never drinks coffee.","Lui non beve mai caffè."),
+    v("work","wɜːrk","lavorare","She works in a bank.","Lei lavora in banca."),
+    v("go to bed","goʊ tə bed","andare a letto","I go to bed at eleven.","Vado a letto alle undici.")
+  ],
+  quiz:[
+    q("She ___ every day.",["work","works","working"],1,"Terza persona singolare: si aggiunge <b>-s</b>."),
+    q("Ordine corretto:",["I eat always breakfast.","I always eat breakfast.","Always I eat breakfast."],1,"L'avverbio di frequenza va prima del verbo principale."),
+    q("He ___ goes to the gym.",["never","is never","never is"],0,"“Never” va prima del verbo: <b>He never goes</b>."),
+    q("They ___ TV in the evening.",["watch","watches","watching"],0,"Con “they” si usa la forma base del verbo."),
+    q("Come si dice “Non bevo mai il caffè”?",["I drink never coffee.","I never drink coffee.","I don't never drink coffee."],1,"“Never” precede direttamente il verbo.")
+  ],
+  listening:[
+    li("I wake up at seven every day.",["I wake up at seven every day.","I wake up at seven on Sundays.","I woke up at seven yesterday."],0,"Mi sveglio alle sette ogni giorno."),
+    li("She usually has breakfast at eight.",["She usually has breakfast at eight.","She always has breakfast at eight.","She never has breakfast."],0,"Di solito fa colazione alle otto."),
+    li("He never drinks coffee.",["He never drinks tea.","He always drinks coffee.","He never drinks coffee."],2,"Lui non beve mai caffè."),
+    li("We sometimes go to bed late.",["We sometimes go to bed late.","We usually go to bed late.","We sometimes go to bed early."],0,"A volte andiamo a letto tardi.")
+  ],
+  speaking:["I usually wake up early.","She works every day.","We never go to bed late.","He always has breakfast."]
+},
+{id:"a2-2", level:"A2", title:"Parlare al passato", grammarTitle:"Past simple: regolari e irregolari",
+  grammar:[
+    "Il <b>past simple</b> descrive azioni concluse nel passato. I verbi regolari aggiungono <b>-ed</b>: <b>visit → visited</b>, <b>watch → watched</b>.",
+    "Molti verbi comuni sono irregolari e vanno imparati a memoria: <b>go → went</b>, <b>see → saw</b>, <b>have → had</b>.",
+    "Forma negativa: <b>didn't</b> + verbo base (<b>I didn't see</b>). Forma interrogativa: <b>Did</b> + soggetto + verbo base (<b>Did you see...?</b>)."
+  ],
+  examples:[["I visited London last year.","Ho visitato Londra l'anno scorso."],["Did you see the movie?","Hai visto il film?"],["She didn't call me.","Lei non mi ha chiamato."]],
+  vocab:[
+    v("yesterday","ˈjestərdeɪ","ieri","I called her yesterday.","L'ho chiamata ieri."),
+    v("last week","læst wiːk","la settimana scorsa","We traveled last week.","Abbiamo viaggiato la settimana scorsa."),
+    v("went","went","andò (go)","She went to the party.","Lei è andata alla festa."),
+    v("saw","sɔː","vide (see)","I saw an old friend.","Ho visto un vecchio amico."),
+    v("did","dɪd","ausiliare passato","Did you finish?","Hai finito?"),
+    v("ago","əˈgoʊ","fa (tempo)","Two years ago.","Due anni fa."),
+    v("visited","ˈvɪzɪtɪd","visitò","She visited Paris.","Lei ha visitato Parigi."),
+    v("watched","wɑːtʃt","guardò","We watched a film.","Abbiamo guardato un film.")
+  ],
+  quiz:[
+    q("Il passato di “go” è:",["goed","went","gone"],1,"È un verbo irregolare: <b>went</b> (per il past simple)."),
+    q("I ___ him yesterday.",["didn't saw","didn't see","not saw"],1,"Dopo <b>didn't</b> il verbo torna alla forma base."),
+    q("___ you go to the party?",["Did","Was","Do"],0,"Le domande al passato si formano con <b>Did</b> + soggetto + verbo base."),
+    q("She ___ Paris last summer.",["visit","visited","visiting"],1,"È un verbo regolare: <b>visited</b>."),
+    q("Come si dice “Non ho guardato la TV ieri”?",["I didn't watch TV yesterday.","I don't watch TV yesterday.","I not watched TV yesterday."],0,"Negazione al passato: <b>didn't</b> + verbo base.")
+  ],
+  listening:[
+    li("I visited my grandmother last week.",["I visited my grandmother last week.","I visit my grandmother every week.","I visited my grandfather last week."],0,"Ho visitato mia nonna la settimana scorsa."),
+    li("Did you see the new movie?",["Did you see the new movie?","Do you see the new movie?","Did you like the new movie?"],0,"Hai visto il nuovo film?"),
+    li("She went to Rome two years ago.",["She went to Rome two years ago.","She goes to Rome every year.","She went to Rome a year ago."],0,"Lei è andata a Roma due anni fa."),
+    li("We didn't have time yesterday.",["We didn't have time yesterday.","We don't have time today.","We didn't have time today."],0,"Non abbiamo avuto tempo ieri.")
+  ],
+  speaking:["I went to the cinema yesterday.","Did you like the film?","She didn't call me.","We visited Paris last year."]
+},
+{id:"b1-1", level:"B1", title:"Progetti futuri", grammarTitle:"Will e going to",
+  grammar:[
+    "Si usa <b>going to</b> per piani già decisi o intenzioni: <b>I'm going to study medicine.</b>",
+    "Si usa <b>will</b> per decisioni spontanee, promesse e previsioni basate su opinioni: <b>I think it will rain.</b> / <b>I'll help you!</b>",
+    "Quando ci sono prove visibili nel presente (es. nuvole nere), si preferisce <b>going to</b>: <b>Look at those clouds, it's going to rain!</b>"
+  ],
+  examples:[["I'm going to travel next year.","Ho intenzione di viaggiare l'anno prossimo."],["I promise I will call you.","Prometto che ti chiamerò."],["It's going to rain.","Sta per piovere."]],
+  vocab:[
+    v("plan","plæn","piano","I have a plan for the summer.","Ho un piano per l'estate."),
+    v("decision","dɪˈsɪʒən","decisione","It's an important decision.","È una decisione importante."),
+    v("probably","ˈprɑːbəbli","probabilmente","It will probably rain.","Probabilmente pioverà."),
+    v("forecast","ˈfɔːrkæst","previsione","The weather forecast is good.","Le previsioni sono buone."),
+    v("promise","ˈprɑːmɪs","promessa","I promise I'll try.","Prometto che ci proverò."),
+    v("intend","ɪnˈtend","avere intenzione","I intend to finish today.","Ho intenzione di finire oggi."),
+    v("future","ˈfjuːtʃər","futuro","Think about your future.","Pensa al tuo futuro."),
+    v("career","kəˈrɪr","carriera","She wants a career in law.","Vuole una carriera nel diritto.")
+  ],
+  quiz:[
+    q("I ___ study abroad next year (è già tutto organizzato).",["am going to","will"],0,"Un piano già deciso si esprime con <b>going to</b>."),
+    q("Look at those clouds! It ___ rain.",["is going to","will"],0,"C'è un'evidenza visibile nel presente: si usa <b>going to</b>."),
+    q("Don't worry, I ___ help you.",["will","am going to"],0,"Un'offerta spontanea si esprime con <b>will</b>."),
+    q("She ___ finish university in June (piano già previsto).",["is going to","will"],0,"Un piano già organizzato richiede <b>going to</b>."),
+    q("Come si dice “Probabilmente pioverà”?",["It will probably rain.","It probably will rain.","It rains probably."],0,"L'ordine corretto è soggetto + will + probably + verbo.")
+  ],
+  listening:[
+    li("I'm going to travel to Japan next year.",["I'm going to travel to Japan next year.","I traveled to Japan last year.","I want to travel to Japan someday."],0,"Ho intenzione di viaggiare in Giappone l'anno prossimo."),
+    li("It will probably rain tomorrow.",["It will probably rain tomorrow.","It's going to rain today.","It rained yesterday."],0,"Probabilmente domani pioverà."),
+    li("She's going to start a new job.",["She's going to start a new job.","She started a new job.","She will maybe start a job."],0,"Sta per iniziare un nuovo lavoro."),
+    li("I promise I will call you.",["I promise I called you.","I promise I will call you.","I promise I call you."],1,"Prometto che ti chiamerò.")
+  ],
+  speaking:["I'm going to learn a new language.","It will be a great year.","I promise I'll try my best.","She's going to open her own business."]
+},
+{id:"b1-2", level:"B1", title:"Esperienze di vita", grammarTitle:"Present perfect",
+  grammar:[
+    "Il <b>present perfect</b> (<b>have/has</b> + participio passato) si usa per esperienze di vita, senza specificare quando: <b>I have visited Japan.</b>",
+    "Si differenzia dal past simple, che indica un momento preciso e concluso: <b>I visited Japan in 2019.</b>",
+    "Parole chiave: <b>ever</b> (mai, nelle domande), <b>never</b> (mai), <b>already</b> (già), <b>yet</b> (ancora/già, in frasi negative/interrogative)."
+  ],
+  examples:[["Have you ever tried sushi?","Hai mai provato il sushi?"],["She hasn't finished yet.","Lei non ha ancora finito."],["I have already seen it.","L'ho già visto."]],
+  vocab:[
+    v("experience","ɪkˈspɪriəns","esperienza","It was a great experience.","È stata un'esperienza fantastica."),
+    v("ever","ˈevər","mai (in domande)","Have you ever been to Spain?","Sei mai stato in Spagna?"),
+    v("already","ɔːlˈredi","già","I have already eaten.","Ho già mangiato."),
+    v("yet","jet","ancora/già","She hasn't called yet.","Lei non ha ancora chiamato."),
+    v("been","bɪn","stato/andato","I have been to Rome.","Sono stato a Roma."),
+    v("tried","traɪd","provato","I've tried sushi once.","Ho provato il sushi una volta."),
+    v("achievement","əˈtʃiːvmənt","traguardo","That's a great achievement.","È un grande traguardo."),
+    v("abroad","əˈbrɔːd","all'estero","She studied abroad.","Ha studiato all'estero.")
+  ],
+  quiz:[
+    q("Have you ___ been to London?",["ever","never","already"],0,"Nelle domande al present perfect si usa <b>ever</b>."),
+    q("I ___ my homework.",["have already finished","have finished already yet","already have finished"],0,"L'ordine corretto è <b>have already + participio</b>."),
+    q("She hasn't arrived ___.",["yet","already","ever"],0,"Nelle frasi negative si usa <b>yet</b> per “ancora”."),
+    q("I have lived here ___ 2015.",["for","since"],1,"<b>Since</b> indica un punto preciso nel tempo (dal 2015)."),
+    q("Come si dice “Non sono mai stato in Giappone”?",["I have never been to Japan.","I never went to Japan.","I am never in Japan."],0,"Present perfect + never per esperienze di vita.")
+  ],
+  listening:[
+    li("Have you ever tried Thai food?",["Have you ever tried Thai food?","Have you ever cooked Thai food?","Did you ever try Thai food?"],0,"Hai mai provato il cibo thailandese?"),
+    li("I have already seen this film.",["I have already seen this film.","I have never seen this film.","I saw this film yesterday."],0,"Ho già visto questo film."),
+    li("She hasn't finished her project yet.",["She hasn't started her project yet.","She hasn't finished her project yet.","She has finished her project."],1,"Lei non ha ancora finito il suo progetto."),
+    li("We have lived here since 2015.",["We have lived here since 2015.","We lived here in 2015.","We have lived here for 2015."],0,"Viviamo qui dal 2015.")
+  ],
+  speaking:["I have never been to Australia.","Have you ever tried sushi?","I've already finished my work.","She has lived here for five years."]
+},
+{id:"b2-1", level:"B2", title:"Ipotesi e condizioni", grammarTitle:"Periodo ipotetico: primo e secondo tipo",
+  grammar:[
+    "<b>Primo tipo</b> (probabile/reale): <b>If</b> + present simple, <b>will</b> + verbo base. Esempio: <b>If it rains, I will stay home.</b>",
+    "<b>Secondo tipo</b> (ipotetico/poco probabile nel presente): <b>If</b> + past simple, <b>would</b> + verbo base. Esempio: <b>If I won the lottery, I would travel the world.</b>",
+    "Con il secondo tipo, dopo “if I” si usa spesso <b>were</b> anche al posto di “was”: <b>If I were you, I would apologize.</b>"
+  ],
+  examples:[["If it rains, we'll cancel the picnic.","Se piove, annulleremo il picnic."],["If I were rich, I would travel a lot.","Se fossi ricco, viaggerei molto."],["Unless you study, you won't pass.","A meno che tu non studi, non passerai."]],
+  vocab:[
+    v("condition","kənˈdɪʃən","condizione","There is one condition.","C'è una condizione."),
+    v("unless","ənˈles","a meno che","Unless it rains, we'll go.","A meno che non piova, andremo."),
+    v("would","wʊd","condizionale","I would love to help.","Mi piacerebbe aiutare."),
+    v("imagine","ɪˈmædʒɪn","immaginare","Imagine living there!","Immagina di vivere lì!"),
+    v("lottery","ˈlɑːtəri","lotteria","If I won the lottery...","Se vincessi alla lotteria..."),
+    v("apologize","əˈpɑːlədʒaɪz","scusarsi","You should apologize.","Dovresti scusarti."),
+    v("wealthy","ˈwelθi","ricco","He is very wealthy.","Lui è molto ricco."),
+    v("realistic","ˌriːəˈlɪstɪk","realistico","Be realistic about it.","Sii realistico al riguardo.")
+  ],
+  quiz:[
+    q("If it ___ tomorrow, we will cancel the picnic.",["rains","rained","will rain"],0,"Primo tipo: <b>if</b> + present simple.","Il primo tipo esprime condizioni probabili."),
+    q("If I ___ you, I would say sorry.",["was","were"],1,"Nel secondo tipo si preferisce <b>were</b> con tutti i soggetti."),
+    q("If I had more time, I ___ learn the piano.",["will","would"],1,"Nel secondo tipo la conseguenza usa <b>would</b>."),
+    q("“If I win the match, I'll celebrate” è un esempio di:",["primo tipo","secondo tipo"],0,"Present simple + will → primo tipo (condizione reale/probabile)."),
+    q("Come si dice “Se avessi più soldi, viaggerei di più”?",["If I have more money, I will travel more.","If I had more money, I would travel more.","If I had more money, I travel more."],1,"Secondo tipo: if + past simple, would + verbo.")
+  ],
+  listening:[
+    li("If it rains tomorrow, we'll stay at home.",["If it rains tomorrow, we'll stay at home.","If it rained tomorrow, we'd stay home.","If it rains today, we stay home."],0,"Se domani piove, resteremo a casa."),
+    li("If I were rich, I would travel the world.",["If I was rich, I will travel the world.","If I were rich, I would travel the world.","If I am rich, I would travel."],1,"Se fossi ricco, viaggerei per il mondo."),
+    li("Unless you study, you won't pass the exam.",["Unless you study, you won't pass the exam.","If you study, you won't pass the exam.","Unless you study, you will pass."],0,"A meno che tu non studi, non passerai l'esame."),
+    li("If I had more time, I would learn to paint.",["If I have more time, I will learn to paint.","If I had more time, I would learn to paint.","If I had time, I learn to paint."],1,"Se avessi più tempo, imparerei a dipingere.")
+  ],
+  speaking:["If I win, I'll be so happy.","If I were you, I would apologize.","Unless we hurry, we'll be late.","If I had a million euros, I would travel."]
+},
+{id:"b2-2", level:"B2", title:"Il mondo del lavoro", grammarTitle:"La forma passiva",
+  grammar:[
+    "La forma passiva si costruisce con <b>be</b> + participio passato: <b>Cars are produced in Germany.</b>",
+    "Si usa quando l'azione è più importante di chi la compie, o quando l'autore non è noto/rilevante.",
+    "Al passato: <b>The email was sent yesterday.</b> Al futuro: <b>The meeting will be cancelled.</b>"
+  ],
+  examples:[["The report was written by the team.","Il rapporto è stato scritto dal team."],["This product is made in Italy.","Questo prodotto è fatto in Italia."],["The deadline was extended.","La scadenza è stata prorogata."]],
+  vocab:[
+    v("company","ˈkʌmpəni","azienda","She works for a big company.","Lavora per una grande azienda."),
+    v("employee","ɪmpˈlɔɪiː","dipendente","He's a new employee.","È un nuovo dipendente."),
+    v("meeting","ˈmiːtɪŋ","riunione","The meeting starts at 9.","La riunione inizia alle 9."),
+    v("deadline","ˈdedˌlаɪn","scadenza","The deadline is Friday.","La scadenza è venerdì."),
+    v("report","rɪˈpɔːrt","rapporto","Please send the report.","Per favore invia il rapporto."),
+    v("manage","ˈmænɪdʒ","gestire","She manages the team.","Lei gestisce il team."),
+    v("produce","prəˈduːs","produrre","They produce electronics.","Producono elettronica."),
+    v("salary","ˈsæləri","stipendio","The salary is paid monthly.","Lo stipendio è pagato mensilmente.")
+  ],
+  quiz:[
+    q("Passivo di “They sell the products online.”",["The products are sold online.","The products sell online.","The products was sold online."],0,"Soggetto + be + participio passato: <b>are sold</b>."),
+    q("The report ___ by the team yesterday.",["was written","were written"],0,"“The report” è singolare: <b>was written</b>."),
+    q("The meeting ___ next week.",["will be cancelled","will cancelled"],0,"Futuro passivo: <b>will be</b> + participio passato."),
+    q("Quale frase è corretta?",["This car was made in Italy.","This car made in Italy."],0,"Serve l'ausiliare <b>be</b> nella forma passiva."),
+    q("Come si dice “Lo stipendio viene pagato ogni mese”?",["The salary pays every month.","The salary is paid every month.","The salary paid every month."],1,"Presente passivo: <b>is paid</b>.")
+  ],
+  listening:[
+    li("The report was written by the team.",["The report was written by the team.","The report is written by the team.","The report was read by the team."],0,"Il rapporto è stato scritto dal team."),
+    li("The meeting will be cancelled tomorrow.",["The meeting was cancelled yesterday.","The meeting will be cancelled tomorrow.","The meeting will be moved tomorrow."],1,"La riunione sarà annullata domani."),
+    li("This product is made in Italy.",["This product is made in Italy.","This product was made in Italy.","This product is sold in Italy."],0,"Questo prodotto è fatto in Italia."),
+    li("The deadline was extended by one week.",["The deadline was extended by one week.","The deadline was reduced by one week.","The deadline is extended every week."],0,"La scadenza è stata prorogata di una settimana.")
+  ],
+  speaking:["The project was completed on time.","The salary is paid every month.","The meeting has been rescheduled.","The email was sent this morning."]
+},
+{id:"c1-1", level:"C1", title:"Phrasal verbs e sfumature", grammarTitle:"Phrasal verbs comuni",
+  grammar:[
+    "I <b>phrasal verbs</b> uniscono un verbo a una particella e assumono un significato spesso idiomatico, diverso dal verbo base: <b>give up</b> (rinunciare) ≠ give.",
+    "Alcuni sono separabili (<b>turn the light off</b> / <b>turn off the light</b>), altri no (<b>look after someone</b>, mai *look someone after*).",
+    "Sono fondamentali per un inglese naturale e informale: i madrelingua li usano molto più dei verbi “formali” equivalenti."
+  ],
+  examples:[["I gave up smoking last year.","Ho smesso di fumare l'anno scorso."],["She looks after her brother.","Lei si prende cura di suo fratello."],["Let's put off the meeting.","Rimandiamo la riunione."]],
+  vocab:[
+    v("give up","gɪv ʌp","rinunciare/smettere","I gave up sugar.","Ho rinunciato allo zucchero."),
+    v("look after","lʊk ˈæftər","prendersi cura di","She looks after her parents.","Si prende cura dei suoi genitori."),
+    v("put off","pʊt ɔːf","rimandare","Let's put off the trip.","Rimandiamo il viaggio."),
+    v("run into","rʌn ˈɪntuː","imbattersi in (qualcuno)","I ran into an old friend.","Mi sono imbattuto in un vecchio amico."),
+    v("come across","kʌm əˈkrɔːs","imbattersi in (qualcosa)","I came across this article.","Mi sono imbattuto in questo articolo."),
+    v("figure out","ˈfɪgjər aʊt","capire/risolvere","Can you figure this out?","Riesci a capirlo?"),
+    v("get along","gɛt əˈlɔːŋ","andare d'accordo","We get along well.","Andiamo d'accordo."),
+    v("bring up","brɪŋ ʌp","tirare su/sollevare un tema","She brought up an idea.","Ha sollevato un'idea.")
+  ],
+  quiz:[
+    q("I need to ___ this problem.",["figure out","figure"],0,"“Figure out” significa capire/risolvere."),
+    q("She ___ her grandmother every weekend.",["looks after","looks for"],0,"“Look after” = prendersi cura di."),
+    q("Cosa significa “give up”?",["arrendersi/smettere","continuare"],0,"“Give up” significa rinunciare o smettere di fare qualcosa."),
+    q("We ___ an old classmate at the airport.",["ran into","ran over"],0,"“Run into” = imbattersi in qualcuno per caso."),
+    q("Come si dice “Rimandiamo la riunione a lunedì”?",["Let's put off the meeting until Monday.","Let's give up the meeting until Monday.","Let's run into the meeting on Monday."],0,"“Put off” significa rimandare.")
+  ],
+  listening:[
+    li("I gave up sugar two months ago.",["I gave up sugar two months ago.","I gave up coffee two months ago.","I give up sugar every month."],0,"Ho rinunciato allo zucchero due mesi fa."),
+    li("She looks after her elderly parents.",["She looks for her elderly parents.","She looks after her elderly parents.","She looked after her parents."],1,"Si prende cura dei suoi genitori anziani."),
+    li("We ran into each other at the mall.",["We ran into each other at the mall.","We ran into each other at work.","We run into each other often."],0,"Ci siamo imbattuti l'uno nell'altra al centro commerciale."),
+    li("Can you figure out this puzzle?",["Can you figure out this puzzle?","Can you figure this problem?","Could you figure out this puzzle?"],0,"Riesci a risolvere questo puzzle?")
+  ],
+  speaking:["I need to give up bad habits.","She looks after the children every day.","Let's put off the decision.","I came across an interesting article."]
+},
+{id:"c1-2", level:"C1", title:"Discorso persuasivo", grammarTitle:"Inversione e cleft sentences",
+  grammar:[
+    "L'<b>inversione enfatica</b> si usa dopo avverbi negativi o restrittivi posti a inizio frase: <b>Never have I seen such dedication.</b>",
+    "Le <b>cleft sentences</b> mettono in risalto un elemento della frase: <b>It was John who solved the problem.</b> / <b>What I need is more time.</b>",
+    "Sono strutture tipiche di un registro formale e persuasivo, molto usate nei discorsi pubblici."
+  ],
+  examples:[["Not only did she win, but she also broke the record.","Non solo ha vinto, ma ha anche battuto il record."],["It is hard work that leads to success.","È il duro lavoro che porta al successo."],["What matters most is honesty.","Ciò che conta di più è l'onestà."]],
+  vocab:[
+    v("dedication","ˌdedɪˈkeɪʃən","dedizione","Her dedication is inspiring.","La sua dedizione è ispiratrice."),
+    v("emphasize","ˈemfəsaɪz","enfatizzare","Let me emphasize this point.","Lasciatemi enfatizzare questo punto."),
+    v("achieve","əˈtʃiːv","raggiungere","We achieved our goal.","Abbiamo raggiunto il nostro obiettivo."),
+    v("argument","ˈɑːrgjumənt","argomentazione","That's a strong argument.","È un'argomentazione forte."),
+    v("persuade","pərˈsweɪd","persuadere","I persuaded her to stay.","L'ho persuasa a restare."),
+    v("undoubtedly","ʌnˈdaʊtɪdli","indubbiamente","She is, undoubtedly, talented.","È, indubbiamente, di talento."),
+    v("remarkable","rɪˈmɑːrkəbl","notevole","It was a remarkable achievement.","È stato un traguardo notevole."),
+    v("integrity","ɪnˈtegrəti","integrità","He acted with integrity.","Ha agito con integrità.")
+  ],
+  quiz:[
+    q("___ have I seen such courage.",["Never","Not","No"],0,"Inversione dopo un avverbio negativo iniziale: <b>Never have I...</b>"),
+    q("___ was Maria who fixed the bug.",["It","This","That"],0,"Cleft sentence standard: <b>It was... who...</b>"),
+    q("Not only ___ she finish first, but she also set a record.",["did","does","was"],0,"Dopo “not only” a inizio frase serve l'inversione con l'ausiliare: <b>did</b>."),
+    q("Cosa significa “undoubtedly”?",["senza dubbio","con qualche dubbio"],0,"“Undoubtedly” = indubbiamente, senza alcun dubbio."),
+    q("Come si dice “Ciò che conta è l'integrità”?",["What matters is integrity.","That matters is integrity.","It matters integrity."],0,"Cleft sentence con “what” per enfatizzare il soggetto.")
+  ],
+  listening:[
+    li("Never have I seen such dedication.",["Never have I seen such dedication.","I have never seen such dedication.","Never I have seen such dedication."],0,"Non ho mai visto tanta dedizione."),
+    li("It was her hard work that made the difference.",["It was her hard work that made the difference.","It was her talent that made the difference.","It was hard work that made a difference."],0,"È stato il suo duro lavoro a fare la differenza."),
+    li("Not only is she talented, but also humble.",["Not only she is talented, but also humble.","Not only is she talented, but also humble.","She is not only talented, humble too."],1,"Non solo è talentuosa, ma anche umile."),
+    li("What we need is a clear strategy.",["What we need is a clear strategy.","What we need is more time.","What we want is a clear strategy."],0,"Ciò di cui abbiamo bisogno è una strategia chiara.")
+  ],
+  speaking:["Never have I felt so proud.","It is honesty that builds trust.","Not only did we finish, we also won.","What matters most is integrity."]
+},
+{id:"c2-1", level:"C2", title:"Padronanza idiomatica", grammarTitle:"Idiomi avanzati e collocazioni",
+  grammar:[
+    "Gli <b>idiomi</b> non si traducono letteralmente: vanno imparati come blocchi di significato. <b>It's not rocket science</b> significa “non è difficile”.",
+    "Le <b>collocazioni</b> sono combinazioni di parole che “suonano naturali” insieme: si dice <b>make a decision</b>, non *do a decision*.",
+    "Un parlante di livello C2 riconosce e usa questi elementi in modo naturale, senza tradurre mentalmente dall'italiano."
+  ],
+  examples:[["You hit the nail on the head.","Hai colpito nel segno."],["Let's not beat around the bush.","Non giriamoci intorno."],["He's under the weather today.","Oggi non si sente bene."]],
+  vocab:[
+    v("hit the nail on the head","hɪt ðə neɪl ɑːn ðə hed","colpire nel segno","You hit the nail on the head!","Hai colpito nel segno!"),
+    v("beat around the bush","biːt əˈraʊnd ðə bʊʃ","girarci intorno","Stop beating around the bush.","Smetti di girarci intorno."),
+    v("under the weather","ˈʊndər ðə ˈweðər","sentirsi poco bene","I'm feeling under the weather.","Non mi sento tanto bene."),
+    v("a piece of cake","ə piːs əv keɪk","un gioco da ragazzi","This exam is a piece of cake.","Questo esame è un gioco da ragazzi."),
+    v("break the ice","breɪk ði aɪs","rompere il ghiaccio","He told a joke to break the ice.","Ha fatto una battuta per rompere il ghiaccio."),
+    v("get the ball rolling","gɛt ðə bɔːl ˈroʊlɪŋ","dare il via","Let's get the ball rolling.","Diamo il via."),
+    v("on the same page","ɑːn ðə seɪm peɪdʒ","sulla stessa lunghezza d'onda","Now we're on the same page.","Ora siamo sulla stessa lunghezza d'onda."),
+    v("cut corners","kʊt ˈkɔːrnərz","risparmiare (su qualità)","Don't cut corners on safety.","Non risparmiare sulla sicurezza.")
+  ],
+  quiz:[
+    q("Let's stop wasting time and ___.",["get the ball rolling","cut corners"],0,"“Get the ball rolling” significa iniziare finalmente qualcosa."),
+    q("Cosa significa “a piece of cake”?",["molto difficile","molto facile"],1,"È un idioma per dire che qualcosa è estremamente facile."),
+    q("I feel a bit ___ today, I might have a cold.",["under the weather","on the same page"],0,"“Under the weather” = sentirsi poco bene."),
+    q("He ___ when he said the plan was too risky.",["hit the nail on the head","broke the ice"],0,"Ha colpito nel segno con quell'osservazione."),
+    q("Come si dice “Smettiamo di girarci intorno”?",["Let's get the ball rolling.","Let's stop beating around the bush.","Let's cut corners."],1,"“Beat around the bush” = girarci intorno, evitare il punto.")
+  ],
+  listening:[
+    li("You really hit the nail on the head.",["You really hit the nail on the head.","You really broke the ice well.","You really cut corners there."],0,"Hai davvero colpito nel segno."),
+    li("I'm feeling a bit under the weather.",["I'm feeling a bit under the weather.","I'm feeling on top of the world.","I'm feeling under pressure."],0,"Mi sento un po' giù di forma."),
+    li("Don't worry, it's a piece of cake.",["Don't worry, it's a piece of cake.","Don't worry, it's rocket science.","Don't worry, it's under control."],0,"Non preoccuparti, è un gioco da ragazzi."),
+    li("Let's break the ice with a joke.",["Let's break the ice with a joke.","Let's get the ball rolling with a joke.","Let's cut the ice with a joke."],0,"Rompiamo il ghiaccio con una battuta.")
+  ],
+  speaking:["Let's get the ball rolling.","We're finally on the same page.","Please don't cut corners on this.","Stop beating around the bush."]
+},
+{id:"c2-2", level:"C2", title:"Registro e retorica", grammarTitle:"Registro formale e dispositivi retorici",
+  grammar:[
+    "Cambiare <b>registro</b> significa adattare il linguaggio al contesto: <b>Could you possibly help me?</b> (formale) vs <b>Can you help?</b> (informale).",
+    "Il <b>rule of three</b> (tricolon) è un dispositivo retorico che ripete un'idea in tre parti per renderla memorabile: <b>We came, we saw, we conquered.</b>",
+    "Il <b>contrasto</b> rafforza un messaggio persuasivo: <b>Not fear, but hope. Not division, but unity.</b>"
+  ],
+  examples:[["Ladies and gentlemen, thank you for being here.","Signore e signori, grazie per essere qui."],["Is this the future we want?","È questo il futuro che vogliamo?"],["Not only informative, but also inspiring.","Non solo informativo, ma anche ispiratore."]],
+  vocab:[
+    v("rhetoric","ˈretərɪk","retorica","She used powerful rhetoric.","Ha usato una retorica potente."),
+    v("formal","ˈfɔːrməl","formale","Use a formal tone in the letter.","Usa un tono formale nella lettera."),
+    v("colloquial","kəˈloʊkwiəl","colloquiale","That's a colloquial expression.","È un'espressione colloquiale."),
+    v("audience","ˈɔːdiəns","pubblico","The audience applauded.","Il pubblico ha applaudito."),
+    v("persuasive","pərˈsweɪsɪv","persuasivo","It was a persuasive speech.","È stato un discorso persuasivo."),
+    v("contrast","ˈkɑːntræst","contrasto","Note the contrast between the two.","Nota il contrasto tra i due."),
+    v("emphasis","ˈemfəsɪs","enfasi","Put emphasis on this word.","Metti enfasi su questa parola."),
+    v("deliver a speech","dɪˈlɪvər ə spiːtʃ","tenere un discorso","She delivered a great speech.","Ha tenuto un ottimo discorso.")
+  ],
+  quiz:[
+    q("Quale frase è più formale?",["Could you possibly help me?","Can you help?"],0,"Le forme più lunghe e indirette sono tipiche del registro formale."),
+    q("Il “rule of three” è un esempio di:",["retorica","grammatica"],0,"È un dispositivo retorico usato nei discorsi persuasivi."),
+    q("“Not only informative, but also inspiring” è un esempio di:",["contrasto","registro formale"],0,"Mette in contrasto due qualità per rafforzare il messaggio."),
+    q("Cosa significa “colloquial”?",["informale e quotidiano","molto tecnico"],0,"“Colloquial” indica un linguaggio informale, da conversazione."),
+    q("Come si dice “Tenere un discorso”?",["To deliver a speech.","To make a rhetoric.","To speech a discourse."],0,"La collocazione corretta è <b>deliver a speech</b>.")
+  ],
+  listening:[
+    li("Ladies and gentlemen, thank you for being here.",["Ladies and gentlemen, thank you for being here.","Ladies and gentlemen, thank you for coming.","Ladies and gentlemen, welcome to the show."],0,"Signore e signori, grazie per essere qui."),
+    li("Is this the future we truly want?",["Is this the future we truly want?","Is this the future we need?","Is this the future we deserve?"],0,"È questo il futuro che vogliamo davvero?"),
+    li("Not fear, but hope guides us forward.",["Not fear, but hope guides us forward.","Not hope, but fear guides us forward.","Not fear, but courage guides us."],0,"Non la paura, ma la speranza ci guida avanti."),
+    li("We came, we saw, we conquered.",["We came, we saw, we conquered.","We arrived, we saw, we won.","We came, we fought, we conquered."],0,"Siamo venuti, abbiamo visto, abbiamo vinto.")
+  ],
+  speaking:["Thank you, ladies and gentlemen.","Together, we can make a difference.","This is not the end, it's the beginning.","Let us rise to the challenge."]
+}
+];
+
+var LESSON_XP = 60;
+var QUIZ_XP = 8;
+var LISTEN_XP = 6;
+var SPEAK_XP = 6;
+var CARD_XP = 2;
+
+/* ============================ STATE ============================ */
+var DAY_MS = 86400000;
+function todayStr(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function addDays(str, n){ var d=new Date(str+"T00:00:00"); d.setDate(d.getDate()+n); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
+var DEFAULT_STATE = { xp:0, streak:0, lastActiveDate:null, accent:"en-GB", completedLessons:{}, vocabBox:{} };
+var state = loadState();
+
+function loadState(){
+  try{
+    var raw = localStorage.getItem("fluento_v1");
+    if(!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    var parsed = JSON.parse(raw);
+    return Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
+  }catch(e){ return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+}
+function saveState(){ try{ localStorage.setItem("fluento_v1", JSON.stringify(state)); }catch(e){} }
+
+function touchStreak(){
+  var t = todayStr();
+  if(state.lastActiveDate === t) return;
+  if(state.lastActiveDate === addDays(t,-1)) state.streak += 1;
+  else state.streak = 1;
+  state.lastActiveDate = t;
+  saveState();
+}
+function addXp(n){ state.xp += n; saveState(); renderTopbar(); showToast("+"+n+" XP"); }
+
+/* ============================ TOAST ============================ */
+var toastTimer = null;
+function showToast(text){
+  var el = document.getElementById("toast");
+  el.textContent = text;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove("show"); }, 1400);
+}
+
+/* ============================ TTS / STT ============================ */
+var voicesCache = [];
+function loadVoices(){ voicesCache = (window.speechSynthesis ? speechSynthesis.getVoices() : []); }
+if(window.speechSynthesis){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+function pickVoice(){
+  var wantLocale = state.accent === "en-US" ? "en-US" : "en-GB";
+  var exact = voicesCache.filter(function(v){ return v.lang === wantLocale; });
+  if(exact.length) return exact[0];
+  var loose = voicesCache.filter(function(v){ return v.lang && v.lang.indexOf("en") === 0; });
+  return loose[0] || null;
+}
+function speak(text){
+  try{
+    if(!window.speechSynthesis) { showToast("Audio non supportato"); return; }
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var voice = pickVoice();
+    if(voice) u.voice = voice;
+    u.lang = state.accent === "en-US" ? "en-US" : "en-GB";
+    u.rate = 0.92;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function getRecognition(){
+  var C = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!C) return null;
+  var r = new C();
+  r.lang = state.accent === "en-US" ? "en-US" : "en-GB";
+  r.maxAlternatives = 1;
+  r.interimResults = false;
+  return r;
+}
+function normalize(s){ return s.toLowerCase().replace(/[^\w\s']/g,"").split(/\s+/).filter(Boolean); }
+function similarity(target, heard){
+  var t = normalize(target), h = normalize(heard);
+  if(!t.length) return 0;
+  var pool = h.slice();
+  var matches = 0;
+  t.forEach(function(w){
+    var idx = pool.indexOf(w);
+    if(idx > -1){ matches++; pool.splice(idx,1); }
+  });
+  return matches / t.length;
+}
+
+/* ============================ VOCAB / SRS ============================ */
+var BOX_INTERVALS = [0,1,3,7,16];
+function allVocabMap(){
+  var map = {};
+  LESSONS.forEach(function(l){ l.vocab.forEach(function(w){ map[l.id+"::"+w.en] = {word:w, lessonId:l.id, lessonTitle:l.title}; }); });
+  return map;
+}
+function ensureVocabEntry(key){
+  if(!state.vocabBox[key]) state.vocabBox[key] = {box:0, next: todayStr()};
+}
+function addLessonVocabToBox(lesson){
+  lesson.vocab.forEach(function(w){
+    var key = lesson.id+"::"+w.en;
+    ensureVocabEntry(key);
+  });
+  saveState();
+}
+function dueVocabKeys(){
+  var t = todayStr();
+  return Object.keys(state.vocabBox).filter(function(k){ return state.vocabBox[k].next <= t; });
+}
+function reviewWord(key, grade){
+  var entry = state.vocabBox[key];
+  if(!entry) return;
+  if(grade === "hard") entry.box = Math.max(0, entry.box - 1);
+  else if(grade === "good") entry.box = Math.min(BOX_INTERVALS.length-1, entry.box + 1);
+  entry.next = addDays(todayStr(), BOX_INTERVALS[entry.box]);
+  saveState();
+}
+
+/* ============================ PATH / UNLOCK LOGIC ============================ */
+function isLessonDone(id){ return !!state.completedLessons[id]; }
+function isLessonUnlocked(index){ if(index === 0) return true; return isLessonDone(LESSONS[index-1].id); }
+function nextLessonIndex(){
+  for(var i=0;i<LESSONS.length;i++){ if(!isLessonDone(LESSONS[i].id)) return i; }
+  return LESSONS.length - 1;
+}
+function completedCount(){ return LESSONS.filter(function(l){ return isLessonDone(l.id); }).length; }
+
+/* ============================ SVG ICONS ============================ */
+var ICO = {
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 6l6 6-6 6"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 12l5 5 9-11"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M8 5v14l11-7z"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v4"/></svg>',
+  badge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="9" r="6"/><path d="M9 14.5L7 21l5-3 5 3-2-6.5"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 5h6a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4z"/><path d="M20 5h-6a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h7z"/></svg>'
+};
+
+/* ============================ RENDER ROUTER ============================ */
+var ui = { view:"home", level:null, lessonId:null, step:0, cardIndex:0, flipped:false, quizIndex:0, quizAnswered:false, listenIndex:0, listenAnswered:false, listenPlayed:false, speakIndex:0, vocabTab:"review", reviewKey:null, reviewFlipped:false };
+
+function setView(v, extra){
+  ui.view = v;
+  if(extra) Object.assign(ui, extra);
+  document.querySelectorAll(".navbtn").forEach(function(b){ b.classList.toggle("active", b.dataset.view === v); });
+  render();
+  document.getElementById("app").scrollTop = 0;
+}
+
+function render(){
+  renderTopbar();
+  var app = document.getElementById("app");
+  if(ui.view === "home") app.innerHTML = renderHome();
+  else if(ui.view === "path") app.innerHTML = renderPath();
+  else if(ui.view === "lessonList") app.innerHTML = renderLessonList();
+  else if(ui.view === "lesson") app.innerHTML = renderLesson();
+  else if(ui.view === "vocab") app.innerHTML = renderVocab();
+  else if(ui.view === "speak") app.innerHTML = renderSpeakHub();
+  bindDynamic();
+}
+
+function renderTopbar(){
+  document.getElementById("streakVal").textContent = state.streak;
+  document.getElementById("xpVal").textContent = state.xp;
+  var due = dueVocabKeys().length;
+  var dot = document.getElementById("dueDot");
+  if(due > 0){ dot.hidden = false; dot.textContent = due > 9 ? "9+" : due; } else { dot.hidden = true; }
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  var idx = nextLessonIndex();
+  var lesson = LESSONS[idx];
+  var lvl = LEVEL_INFO[lesson.level];
+  var done = completedCount();
+  var pct = Math.round((done/LESSONS.length)*100);
+  var due = dueVocabKeys().length;
+
+  var badges = computeBadges();
+  var earnedCount = badges.filter(function(b){return b.earned;}).length;
+
+  return ''+
+  '<div class="hero">'+
+    '<div class="eyebrow">Livello '+lesson.level+' · '+lvl.name+'</div>'+
+    '<h2>'+(done===0?"Inizia il tuo percorso":"Continua: "+lesson.title)+'</h2>'+
+    '<p class="sub">'+(done===0?"12 lezioni da zero fino al livello madrelingua. Vocabolario, grammatica, ascolto e pronuncia in un unico percorso.":"Lezione "+(idx+1)+" di "+LESSONS.length+" — "+lvl.desc)+'</p>'+
+    '<button class="go-btn" data-action="continue">'+ICO.play+' '+(done===0?"Comincia ora":"Continua")+'</button>'+
+    '<div class="ring-wrap">'+ringSvg(pct, "#fff")+'</div>'+
+  '</div>'+
+  '<div class="stats-row">'+
+    '<div class="stat-tile"><div class="num">'+done+'/'+LESSONS.length+'</div><div class="lbl">Lezioni</div></div>'+
+    '<div class="stat-tile"><div class="num">'+Object.keys(state.vocabBox).length+'</div><div class="lbl">Parole</div></div>'+
+    '<div class="stat-tile"><div class="num">'+due+'</div><div class="lbl">Da ripassare</div></div>'+
+  '</div>'+
+  '<div class="section-title">I tuoi traguardi ('+earnedCount+'/'+badges.length+')</div>'+
+  '<div class="badge-grid">'+badges.map(function(b){
+    return '<div class="badge '+(b.earned?"earned":"")+'"><div class="ic">'+ICO.badge+'</div><div class="lbl">'+b.label+'</div></div>';
+  }).join('')+'</div>'+
+  '<div class="section-title">Accento per l'+"'"+'audio</div>'+
+  '<div class="segmented" id="accentSeg">'+
+    '<button data-accent="en-GB" class="'+(state.accent==="en-GB"?"on":"")+'">British 🏴</button>'+
+    '<button data-accent="en-US" class="'+(state.accent==="en-US"?"on":"")+'">American</button>'+
+  '</div>';
+}
+
+function computeBadges(){
+  var done = completedCount(), words = Object.keys(state.vocabBox).length;
+  return [
+    {label:"Prima lezione", earned: done>=1},
+    {label:"Metà percorso", earned: done>=6},
+    {label:"Percorso completo", earned: done>=12},
+    {label:"Streak 3 giorni", earned: state.streak>=3},
+    {label:"Streak 7 giorni", earned: state.streak>=7},
+    {label:"50 parole imparate", earned: words>=50}
+  ];
+}
+
+function ringSvg(pct, color){
+  var r=26, c=2*Math.PI*r, off=c*(1-pct/100);
+  return '<svg viewBox="0 0 64 64" width="64" height="64">'+
+    '<circle cx="32" cy="32" r="'+r+'" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="6"/>'+
+    '<circle cx="32" cy="32" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'" transform="rotate(-90 32 32)"/>'+
+    '<text x="32" y="37" text-anchor="middle" font-size="15" font-weight="700" fill="'+color+'" font-family="Manrope">'+pct+'%</text>'+
+  '</svg>';
+}
+
+/* ---------- PATH (levels + lessons) ---------- */
+function renderPath(){
+  var html = '<div class="section-title">Il tuo percorso</div>';
+  LEVEL_ORDER.forEach(function(lvKey){
+    var info = LEVEL_INFO[lvKey];
+    var lessons = LESSONS.map(function(l,i){return {l:l,i:i};}).filter(function(o){return o.l.level===lvKey;});
+    var doneInLevel = lessons.filter(function(o){return isLessonDone(o.l.id);}).length;
+    html += '<div class="path-level">'+
+      '<div class="level-head">'+
+        '<div class="level-chip" style="background:'+info.color+'">'+lvKey+'</div>'+
+        '<div><div class="level-name">'+info.name+'</div><div class="level-desc">'+info.desc+' · '+doneInLevel+'/'+lessons.length+'</div></div>'+
+      '</div>';
+    lessons.forEach(function(o){
+      var unlocked = isLessonUnlocked(o.i);
+      var done = isLessonDone(o.l.id);
+      html += '<button class="lesson-row '+(done?"done":"")+'" data-lesson="'+o.l.id+'" '+(unlocked?"":"disabled")+'>'+
+        '<div class="num">'+(done?ICO.check:(o.i+1))+'</div>'+
+        '<div class="body"><div class="title">'+o.l.title+'</div><div class="grammar">'+o.l.grammarTitle+'</div></div>'+
+        (unlocked?'<div class="chev">'+ICO.chev+'</div>':'<div class="lock">'+ICO.lock+'</div>')+
+      '</button>';
+    });
+    html += '</div>';
+  });
+  return html;
+}
+
+/* ---------- LESSON LIST (kept for structure; path view used instead) ---------- */
+function renderLessonList(){ return renderPath(); }
+
+/* ---------- LESSON FLOW ---------- */
+var STEP_NAMES = ["Vocabolario","Grammatica","Quiz","Ascolto","Pronuncia","Fine"];
+function currentLesson(){ return LESSONS.find(function(l){return l.id===ui.lessonId;}); }
+
+function renderLesson(){
+  var lesson = currentLesson();
+  if(!lesson) return renderPath();
+  var head = '<div class="back-row" data-action="back-to-path">'+ICO.chev.replace('d="M9 6l6 6-6 6"','d="M15 6l-6 6 6 6"')+' '+lesson.title+'</div>'+
+    '<div class="progressbar">'+STEP_NAMES.map(function(_,i){return '<span class="'+(i<=ui.step?"on":"")+'"></span>';}).join('')+'</div>';
+
+  var body = "";
+  if(ui.step===0) body = renderStepVocab(lesson);
+  else if(ui.step===1) body = renderStepGrammar(lesson);
+  else if(ui.step===2) body = renderStepQuiz(lesson);
+  else if(ui.step===3) body = renderStepListening(lesson);
+  else if(ui.step===4) body = renderStepSpeaking(lesson);
+  else body = renderStepComplete(lesson);
+  return head + body;
+}
+
+function renderStepVocab(lesson){
+  var w = lesson.vocab[ui.cardIndex];
+  return '<div class="section-title">Nuove parole ('+(ui.cardIndex+1)+'/'+lesson.vocab.length+')</div>'+
+    '<div class="flashcard" data-action="flip-intro">'+
+      (ui.flipped?
+        ('<div class="it" style="font-size:20px;font-weight:700;color:var(--ink)">'+w.it+'</div><div class="ex">"'+w.exEn+'"<br>'+w.exIt+'</div>'):
+        ('<div class="word">'+w.en+'</div><div class="ipa mono">/'+w.ipa+'/</div>')
+      )+
+    '</div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-ghost" data-action="speak-word" data-text="'+escapeAttr(w.en)+'">'+ICO.play+' Ascolta</button>'+
+      '<button class="btn btn-primary" data-action="next-card">'+(ui.cardIndex===lesson.vocab.length-1?"Vai alla grammatica":"Prossima parola")+'</button>'+
+    '</div>'+
+    '<p class="note" style="text-align:center">Tocca la carta per vedere la traduzione.</p>';
+}
+
+function renderStepGrammar(lesson){
+  return '<div class="section-title">'+lesson.grammarTitle+'</div>'+
+    '<div class="grammar-box">'+
+      lesson.grammar.map(function(p){return '<p>'+p+'</p>';}).join('')+
+      lesson.examples.map(function(e){return '<div class="example">'+e[0]+'<div class="it">'+e[1]+'</div></div>';}).join('')+
+    '</div>'+
+    '<button class="btn btn-primary" data-action="goto-quiz">Fai il quiz</button>';
+}
+
+function renderStepQuiz(lesson){
+  var item = lesson.quiz[ui.quizIndex];
+  var opts = item.opts.map(function(o,i){
+    var cls = "opt";
+    if(ui.quizAnswered){
+      if(i===item.correct) cls += " correct";
+      else if(i===ui.quizPicked) cls += " wrong";
+    }
+    return '<button class="'+cls+'" data-action="answer-quiz" data-i="'+i+'" '+(ui.quizAnswered?"disabled":"")+'>'+o+'</button>';
+  }).join('');
+  return '<div class="section-title">Quiz · domanda '+(ui.quizIndex+1)+'/'+lesson.quiz.length+'</div>'+
+    '<div class="quiz-q">'+item.q+'</div>'+
+    opts+
+    (ui.quizAnswered? '<div class="explain">'+item.explain+'</div>'+
+      '<button class="btn btn-primary" style="margin-top:14px" data-action="next-quiz">'+(ui.quizIndex===lesson.quiz.length-1?"Vai all'ascolto":"Prossima domanda")+'</button>' : '')+
+  '';
+}
+
+function renderStepListening(lesson){
+  var item = lesson.listening[ui.listenIndex];
+  var opts = item.opts.map(function(o,i){
+    var cls = "opt";
+    if(ui.listenAnswered){
+      if(i===item.correct) cls += " correct";
+      else if(i===ui.listenPicked) cls += " wrong";
+    }
+    return '<button class="'+cls+'" data-action="answer-listen" data-i="'+i+'" '+(ui.listenAnswered?"disabled":"")+'>'+o+'</button>';
+  }).join('');
+  return '<div class="section-title">Ascolto · '+(ui.listenIndex+1)+'/'+lesson.listening.length+'</div>'+
+    '<div class="listen-card card">'+
+      '<button class="speak-btn" data-action="play-listen" data-text="'+escapeAttr(item.audio)+'">'+ICO.play+'</button>'+
+      '<p class="note">Ascolta la frase e scegli cosa hai sentito.</p>'+
+    '</div>'+
+    '<div style="margin-top:14px">'+opts+'</div>'+
+    (ui.listenAnswered? '<div class="explain">Significato: “'+item.it+'”</div>'+
+      '<button class="btn btn-primary" style="margin-top:14px" data-action="next-listen">'+(ui.listenIndex===lesson.listening.length-1?"Vai alla pronuncia":"Prossima frase")+'</button>' : '');
+}
+
+function renderStepSpeaking(lesson){
+  var sentence = lesson.speaking[ui.speakIndex];
+  var canRec = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  return '<div class="section-title">Pronuncia · '+(ui.speakIndex+1)+'/'+lesson.speaking.length+'</div>'+
+    '<div class="listen-card card">'+
+      '<button class="speak-btn" data-action="play-model" data-text="'+escapeAttr(sentence)+'">'+ICO.play+'</button>'+
+      '<div class="sentence">'+sentence+'</div>'+
+      '<p class="note">Ascolta il modello, poi prova a ripeterlo ad alta voce.</p>'+
+      (canRec?
+        ('<button class="mic-btn" id="micBtn" data-action="record" data-text="'+escapeAttr(sentence)+'">'+ICO.mic+'</button>'+
+         '<div id="speakResult"></div>'):
+        ('<div class="note" style="margin-top:14px">Il riconoscimento vocale non è supportato su questo browser. Prova ad aprire Fluento in Chrome su Android o desktop per registrare la tua voce — nel frattempo continua ad allenarti ad orecchio.</div>')
+      )+
+    '</div>'+
+    '<button class="btn btn-primary" style="margin-top:16px" data-action="next-speak">'+(ui.speakIndex===lesson.speaking.length-1?"Completa la lezione":"Prossima frase")+'</button>';
+}
+
+function renderStepComplete(lesson){
+  addLessonVocabToBox(lesson);
+  if(!isLessonDone(lesson.id)){
+    state.completedLessons[lesson.id] = {completedAt: todayStr()};
+    saveState();
+    touchStreak();
+    addXp(LESSON_XP);
+  }
+  var idx = LESSONS.findIndex(function(l){return l.id===lesson.id;});
+  var next = LESSONS[idx+1];
+  return '<div class="card" style="padding:30px 20px;text-align:center">'+
+    '<div style="width:64px;height:64px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M5 12l5 5 9-11"/></svg>'+
+    '</div>'+
+    '<h2 style="font-size:20px">Lezione completata!</h2>'+
+    '<p class="note" style="margin-top:8px">Hai imparato '+lesson.vocab.length+' nuove parole. Le trovi nel tuo Vocabolario per il ripasso.</p>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-ghost" data-action="back-to-path">Percorso</button>'+
+      (next? '<button class="btn btn-primary" data-action="open-lesson" data-id="'+next.id+'">Prossima lezione</button>' : '<button class="btn btn-primary" data-action="goto-vocab">Ripassa il vocabolario</button>')+
+    '</div>'+
+  '</div>';
+}
+
+function escapeAttr(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;"); }
+
+/* ---------- VOCAB TAB ---------- */
+function renderVocab(){
+  var due = dueVocabKeys();
+  var map = allVocabMap();
+  var tabsHtml = '<div class="segmented" id="vocabSeg">'+
+    '<button data-tab="review" class="'+(ui.vocabTab==="review"?"on":"")+'">Ripasso ('+due.length+')</button>'+
+    '<button data-tab="all" class="'+(ui.vocabTab==="all"?"on":"")+'">Tutte le parole</button>'+
+  '</div>';
+
+  if(ui.vocabTab==="all"){
+    var keys = Object.keys(state.vocabBox);
+    var listHtml = keys.length===0 ?
+      ('<div class="empty-state">'+ICO.book+'<p>Completa una lezione per iniziare a costruire il tuo vocabolario.</p></div>') :
+      keys.map(function(k){
+        var entry = map[k]; if(!entry) return "";
+        var box = state.vocabBox[k].box;
+        var color = ["var(--coral)","var(--gold)","var(--gold)","var(--teal)","var(--teal)"][box];
+        return '<div class="vocab-list-item"><span class="box-dot" style="background:'+color+'"></span>'+
+          '<div style="flex:1"><b>'+entry.word.en+'</b> <span class="mono" style="color:var(--ink-soft);font-size:12px">/'+entry.word.ipa+'/</span><div style="font-size:12.5px;color:var(--ink-soft)">'+entry.word.it+'</div></div>'+
+          '<button class="btn-sm btn btn-ghost" data-action="speak-word" data-text="'+escapeAttr(entry.word.en)+'" style="width:auto">'+ICO.play+'</button>'+
+        '</div>';
+      }).join('');
+    return '<div class="section-title">Vocabolario</div>'+tabsHtml+'<div class="card" style="padding:6px 14px;margin-top:14px">'+listHtml+'</div>';
+  }
+
+  if(due.length===0){
+    return '<div class="section-title">Vocabolario</div>'+tabsHtml+
+      '<div class="empty-state"><div class="ic">'+ICO.check+'</div><p>Ottimo lavoro! Non hai parole da ripassare adesso. Torna domani o completa una nuova lezione.</p></div>';
+  }
+  if(!ui.reviewKey || due.indexOf(ui.reviewKey)===-1) ui.reviewKey = due[0];
+  var entry = map[ui.reviewKey];
+  var w = entry.word;
+  return '<div class="section-title">Vocabolario</div>'+tabsHtml+
+    '<div class="section-title" style="margin-top:16px">Da ripassare oggi: '+due.length+'</div>'+
+    '<div class="flashcard" data-action="flip-review">'+
+      (ui.reviewFlipped?
+        ('<div class="it" style="font-size:20px;font-weight:700;color:var(--ink)">'+w.it+'</div><div class="ex">"'+w.exEn+'"<br>'+w.exIt+'</div>'):
+        ('<div class="word">'+w.en+'</div><div class="ipa mono">/'+w.ipa+'/</div>')
+      )+
+    '</div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-ghost" data-action="speak-word" data-text="'+escapeAttr(w.en)+'">'+ICO.play+' Ascolta</button>'+
+    '</div>'+
+    (ui.reviewFlipped?
+      ('<div class="btn-row"><button class="btn btn-ghost" style="color:var(--coral)" data-action="grade-word" data-grade="hard">Da ripassare</button>'+
+       '<button class="btn btn-primary" data-action="grade-word" data-grade="good">La so!</button></div>'):
+      '<p class="note" style="text-align:center;margin-top:10px">Tocca la carta per vedere la risposta.</p>'
+    );
+}
+
+/* ---------- PRONUNCIA HUB ---------- */
+function renderSpeakHub(){
+  var practiced = state.completedLessons ? Object.keys(state.completedLessons) : [];
+  var sentences = [];
+  LESSONS.forEach(function(l){ if(isLessonDone(l.id)) sentences = sentences.concat(l.speaking.map(function(s){return {lesson:l.title, text:s};})); });
+  if(sentences.length===0) sentences = LESSONS[0].speaking.map(function(s){return {lesson:LESSONS[0].title, text:s};});
+  if(ui.speakHubIndex===undefined || ui.speakHubIndex>=sentences.length) ui.speakHubIndex = 0;
+  var item = sentences[ui.speakHubIndex];
+  var canRec = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  return '<div class="section-title">Laboratorio di pronuncia</div>'+
+    '<div class="card" style="padding:18px;margin-bottom:16px">'+
+      '<p class="note">Frasi dalle lezioni che hai completato. Ascolta il modello e ripeti ad alta voce.</p>'+
+    '</div>'+
+    '<div class="listen-card card">'+
+      '<div class="section-title" style="margin:0 0 6px">'+item.lesson+'</div>'+
+      '<button class="speak-btn" data-action="play-model" data-text="'+escapeAttr(item.text)+'">'+ICO.play+'</button>'+
+      '<div class="sentence">'+item.text+'</div>'+
+      (canRec?
+        ('<button class="mic-btn" id="micBtn" data-action="record" data-text="'+escapeAttr(item.text)+'">'+ICO.mic+'</button>'+
+         '<div id="speakResult"></div>'):
+        '<div class="note" style="margin-top:14px">Il riconoscimento vocale non è supportato su questo browser. Su Chrome (Android o desktop) potrai anche registrare la tua voce.</div>'
+      )+
+    '</div>'+
+    '<div class="btn-row"><button class="btn btn-ghost" data-action="hub-prev">Indietro</button><button class="btn btn-primary" data-action="hub-next">Frase successiva</button></div>'+
+    '<div class="section-title">Accento</div>'+
+    '<div class="segmented" id="accentSeg2">'+
+      '<button data-accent="en-GB" class="'+(state.accent==="en-GB"?"on":"")+'">British</button>'+
+      '<button data-accent="en-US" class="'+(state.accent==="en-US"?"on":"")+'">American</button>'+
+    '</div>';
+}
+
+/* ============================ EVENTS ============================ */
+document.querySelectorAll(".navbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    var v = b.dataset.view;
+    if(v==="path") setView("path");
+    else setView(v);
+  });
+});
+
+document.getElementById("app").addEventListener("click", function(e){
+  var t = e.target.closest("[data-action]");
+  if(!t) return;
+  var action = t.dataset.action;
+
+  if(action==="continue"){ var idx=nextLessonIndex(); openLesson(LESSONS[idx].id); }
+  else if(action==="open-lesson"){ openLesson(t.dataset.id); }
+  else if(action==="back-to-path"){ setView("path"); }
+  else if(action==="goto-vocab"){ setView("vocab", {vocabTab:"review"}); }
+
+  else if(action==="flip-intro"){ ui.flipped=!ui.flipped; render(); }
+  else if(action==="next-card"){
+    var lesson=currentLesson();
+    if(ui.cardIndex < lesson.vocab.length-1){ ui.cardIndex++; ui.flipped=false; addXp(CARD_XP); render(); }
+    else { ui.step=1; ui.cardIndex=0; ui.flipped=false; addXp(CARD_XP); render(); }
+  }
+  else if(action==="goto-quiz"){ ui.step=2; ui.quizIndex=0; ui.quizAnswered=false; render(); }
+  else if(action==="answer-quiz"){
+    if(ui.quizAnswered) return;
+    var lesson=currentLesson(); var item=lesson.quiz[ui.quizIndex];
+    ui.quizPicked = parseInt(t.dataset.i,10); ui.quizAnswered=true;
+    if(ui.quizPicked===item.correct) addXp(QUIZ_XP); else render();
+    render();
+  }
+  else if(action==="next-quiz"){
+    var lesson=currentLesson();
+    if(ui.quizIndex < lesson.quiz.length-1){ ui.quizIndex++; ui.quizAnswered=false; render(); }
+    else { ui.step=3; ui.listenIndex=0; ui.listenAnswered=false; render(); }
+  }
+  else if(action==="play-listen"){ speak(t.dataset.text); ui.listenPlayed=true; }
+  else if(action==="answer-listen"){
+    if(ui.listenAnswered) return;
+    var lesson=currentLesson(); var item=lesson.listening[ui.listenIndex];
+    ui.listenPicked = parseInt(t.dataset.i,10); ui.listenAnswered=true;
+    if(ui.listenPicked===item.correct) addXp(LISTEN_XP); else render();
+    render();
+  }
+  else if(action==="next-listen"){
+    var lesson=currentLesson();
+    if(ui.listenIndex < lesson.listening.length-1){ ui.listenIndex++; ui.listenAnswered=false; render(); }
+    else { ui.step=4; ui.speakIndex=0; render(); }
+  }
+  else if(action==="play-model"){ speak(t.dataset.text); }
+  else if(action==="next-speak"){
+    var lesson=currentLesson();
+    if(ui.speakIndex < lesson.speaking.length-1){ ui.speakIndex++; addXp(SPEAK_XP); render(); }
+    else { ui.step=5; addXp(SPEAK_XP); render(); }
+  }
+  else if(action==="record"){ doRecord(t); }
+
+  else if(action==="speak-word"){ speak(t.dataset.text); }
+  else if(action==="flip-review"){ ui.reviewFlipped=!ui.reviewFlipped; render(); }
+  else if(action==="grade-word"){
+    reviewWord(ui.reviewKey, t.dataset.grade);
+    touchStreak(); addXp(CARD_XP);
+    ui.reviewFlipped=false; ui.reviewKey=null;
+    render();
+  }
+  else if(action==="hub-next"){ ui.speakHubIndex=(ui.speakHubIndex||0)+1; render(); }
+  else if(action==="hub-prev"){ ui.speakHubIndex=Math.max(0,(ui.speakHubIndex||0)-1); render(); }
+});
+
+function bindDynamic(){
+  var seg = document.getElementById("accentSeg") || document.getElementById("accentSeg2");
+  if(seg){
+    seg.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){ state.accent=b.dataset.accent; saveState(); render(); });
+    });
+  }
+  var vseg = document.getElementById("vocabSeg");
+  if(vseg){
+    vseg.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){ ui.vocabTab=b.dataset.tab; render(); });
+    });
+  }
+}
+
+function openLesson(id){
+  ui.lessonId=id; ui.step=0; ui.cardIndex=0; ui.flipped=false;
+  ui.quizIndex=0; ui.quizAnswered=false;
+  ui.listenIndex=0; ui.listenAnswered=false;
+  ui.speakIndex=0;
+  setView("lesson");
+}
+
+function doRecord(btn){
+  var rec = getRecognition();
+  var target = btn.dataset.text;
+  var resultEl = document.getElementById("speakResult");
+  if(!rec){ showToast("Microfono non disponibile"); return; }
+  btn.classList.add("listening");
+  if(resultEl) resultEl.innerHTML = '<div class="transcript">In ascolto… parla ora.</div>';
+  var done = false;
+  rec.onresult = function(ev){
+    done = true;
+    var heard = ev.results[0][0].transcript;
+    var score = similarity(target, heard);
+    var cls = score>=0.8?"good":(score>=0.5?"mid":"bad");
+    var label = score>=0.8?"Ottimo!":(score>=0.5?"Buono, continua così":"Riprova, ascolta di nuovo");
+    if(resultEl) resultEl.innerHTML = '<div class="transcript">Hai detto: “'+heard+'”</div><div class="feedback-pill '+cls+'">'+label+'</div>';
+    if(score>=0.5) addXp(SPEAK_XP);
+    btn.classList.remove("listening");
+  };
+  rec.onerror = function(ev){
+    btn.classList.remove("listening");
+    if(!done && resultEl){
+      var msg = ev.error==="not-allowed" ? "Permesso al microfono negato." : "Non ho capito, riprova.";
+      resultEl.innerHTML = '<div class="transcript">'+msg+'</div>';
+    }
+  };
+  rec.onend = function(){ btn.classList.remove("listening"); };
+  try{ rec.start(); }catch(e){ btn.classList.remove("listening"); }
+}
+
+/* ============================ SCROLL SHADOW ============================ */
+document.getElementById("app").addEventListener("scroll", function(){
+  document.getElementById("topbar").classList.toggle("scrolled", document.getElementById("app").scrollTop > 4);
+});
+
+/* ============================ SCROLL RESET (iOS standalone home-screen fix) ============================ */
+try{ if("scrollRestoration" in history) history.scrollRestoration = "manual"; }catch(e){}
+function resetScroll(){
+  try{
+    window.scrollTo(0,0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    var app = document.getElementById("app");
+    if(app) app.scrollTop = 0;
+  }catch(e){}
+}
+["load","pageshow","orientationchange"].forEach(function(ev){ window.addEventListener(ev, resetScroll); });
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) resetScroll(); });
+
+/* ============================ HOT RELOAD (artifact viewers) ============================ */
+function boot(){
+  render();
+  resetScroll();
+  requestAnimationFrame(resetScroll);
+  setTimeout(resetScroll, 60);
+  setTimeout(resetScroll, 300);
+  setTimeout(resetScroll, 800);
+}
+if(window.claude && window.claude.hot){
+  window.claude.hot.ready ? window.claude.hot.ready(boot) : boot();
+} else {
+  boot();
+}
+})();
+</script>
+
+</body>
+</html>
